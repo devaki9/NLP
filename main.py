@@ -1,8 +1,27 @@
 import pandas as pd
-from get_user_media import getUserMedia
+from get_user_media import *
 import os,json
 from func import getCredentials
+from hashtag import *
 
+# print ('\n---------------------------MENU-----------------------------------')
+# print ('\n1.Access Instagram\n2.Hashtag search')
+
+# choice=int(input('Enter your choice'))
+
+# switch()
+# {
+# 	case 1:
+# 			break;
+# 	case 2:
+# 			break;
+# 	default:
+# 		print('\nInvalid choice')		
+# }
+# print('\n----------------------------------------------------------------------')
+
+
+#GETTING USER POSTS AND COMMENTS
 
 params=getCredentials()
 params['debug'] = 'no'
@@ -20,7 +39,7 @@ response_json['comments']=dict()
 response_json['like_count']=dict()
 
 
-response_json['comments']=dict()
+#response_json['comments']=dict()
 
 for post in response['json_data']['data'] :
 	print ("\n\n---------- POST ----------\n") 
@@ -61,11 +80,110 @@ for post in response['json_data']['data'] :
 
 
 os.chdir('/home/devaki/Desktop/insta')
-
 req = json.dumps(response_json)
-
-
 df=pd.read_json(req)
-
 df.to_csv('Insta_posts.csv',index=False)
+
+
+#GETTING HASHTAG SEARCH RELATED INFORMATION
+try:
+	str_hashtag=input('Enter hashtag:#')
+except:
+	str_hashtag="sushantsinghrajput"
+
+params=getCredentials()
+params['hashtag_name'] = str_hashtag 
+hashtagInfoResponse = getHashtagInfo( params ) 
+params['hashtag_id'] = hashtagInfoResponse['json_data']['data'][0]['id']; 
+params['hashtag_id'] = hashtagInfoResponse['json_data']['data'][0]['id'];
+
+filename=str_hashtag+'.csv'
+# file = open(filename,"w")
+# header="id,link,caption,media type,likes,comments"
+# file.write(header)
+
+
+print ("\n\n\n\t-------------------HASHTAG INFO -----------------------\n")
+print ("\nHashtag: " + str_hashtag) 
+print ("Hashtag ID: " + params['hashtag_id']) 
+
+print ("\n\n\n\t\t\t ------------------- HASHTAG TOP MEDIA --------------------\n") 
+params['type'] = 'top_media' 
+hashtagTopMediaResponse = getHashtagMedia( params ) 
+print(hashtagTopMediaResponse)
+
+
+
+hashtag_response=dict()
+hashtag_response['id']=dict()
+hashtag_response['permalink']=dict()
+hashtag_response['caption']=dict()
+hashtag_response['media_type']=dict()
+hashtag_response['like_count']=dict()
+hashtag_response['comments_count']=dict()
+#hashtag_response['comments']=dict()
+
+
+i=0
+
+for post in hashtagTopMediaResponse['json_data']['data'] :
+
+	
+	print ("\n\n---------- POST ----------\n") 
+	print ("Postid:")
+	print (post['id'])
+
+	hashtag_response['id'][i]=post['id']
+		
+	print ("Link to post:") 
+	print (post['permalink']) 
+	hashtag_response['permalink'][i]=post['permalink']
+	
+
+	print ("\nPost caption:") 
+	print (post['caption']) 
+	hashtag_response['caption'][i]=post['caption']
+	
+
+	print ("\nMedia type:") 
+	print (post['media_type']) 
+	hashtag_response['media_type'][i]=post['media_type']
+
+	print ("\nlike_count:") 
+	print (post['like_count']) 
+	hashtag_response['like_count'][i]=post['like_count']
+
+	print ("\nComments:") 
+	print (post['comments_count']) 
+	hashtag_response['comments_count'][i]=post['comments_count']
+	
+	i+=1
+
+
+
+req = json.dumps(hashtag_response)
+df=pd.read_json(req)
+df.to_csv(filename,index=False)
+
+# print ("\n\n\n\t\t\t -------------------- HASHTAG RECENT MEDIA ----------------------\n") 
+# params['type'] = 'recent_media' 
+# hashtagRecentMediaResponse = getHashtagMedia( params ) 
+
+# for post in hashtagRecentMediaResponse['json_data']['data'] :
+# 	print ("\n\n---------- POST ----------\n") 
+# 	print ("Link to post:") 
+# 	print (post['permalink']) 
+# 	print ("\nPost caption:") 
+# 	print (post['caption']) 
+# 	print ("\nMedia type:") 
+# 	print (post['media_type']) 
+
+# print ("\n\n\n\t\t\t ------------------------- USERS RECENTLY SEARCHED HASHTAGS -------------------\n") 
+# getRecentSearchResponse = getRecentlySearchedHashtags( params ) 
+
+# for hashtag in getRecentSearchResponse['json_data']['data'] : 
+# 	print ("\n\n---------- SEARCHED HASHTAG ----------\n") 
+# 	print ("\nHashtag: " + hashtag['name']) 
+# 	print ("Hashtag ID: " + hashtag['id']) 
+
 
