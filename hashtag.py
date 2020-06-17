@@ -20,7 +20,7 @@ def getHashtagMedia( params ) :
 		#https://graph.facebook.com/{graph-api-version}/{ig-hashtag-id}/top_media?user_id={user-id}&fields={fields}
 		#https://graph.facebook.com/{graph-api-version}/{ig-hashtag-id}/recent_media?user_id={user-id}&fields={fields}
 	
-	endpointParams = dict() 
+	endpointParams = dict() 	
 	endpointParams['user_id'] = params['instagram_account_id'] 
 	endpointParams['fields'] = 'id,children,caption,comments_count,like_count,media_type,media_url,permalink' # fields to get back
 	endpointParams['access_token'] = params['access_token'] 
