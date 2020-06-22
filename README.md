@@ -9,3 +9,12 @@ Link to the Instagram API documentation : https://developers.facebook.com/docs/i
 Tweepy is a library used to work with Twitter API
 
 Link to Tweepy documentation : http://docs.tweepy.org/en/v3.8.0/api.html
+
+
+
+-->To obtain Tweets,run the following:
+ $ cd twitter
+ $ python3 main.py
+ 
+ -->To obtain Posts from Instagam run the following:
+$ python3 main.py
