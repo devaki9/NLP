@@ -7,7 +7,7 @@ def getUserMedia( params, pagingUrl = '' ) :
 	endpointParams['fields'] = 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,username,comments,like_count' 
 	endpointParams['access_token'] = params['access_token'] 
 
-	if ( '' == pagingUrl ) : 
+	if ( '' == pagingUrl ) : #1st page
 		url = params['endpoint_base'] + params['instagram_account_id'] + '/media' 
 	else : 
 		url = pagingUrl  

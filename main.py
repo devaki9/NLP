@@ -33,6 +33,9 @@ def AccessYourAccount():
 	response_json['comments'] = dict()
 	response_json['like_count'] = dict()
 
+
+	#response_json['comments']=dict()
+
 	for post in response['json_data']['data'] :
 		print ("\n\n---------- POST ----------\n") 
 		print ("\nPost_id:")
@@ -110,6 +113,7 @@ def getPopularMedia():
 	hashtag_response['media_type']=dict()
 	hashtag_response['like_count']=dict()
 	hashtag_response['comments_count']=dict()
+	#hashtag_response['comments']=dict()
 
 	i=0
 
@@ -180,7 +184,7 @@ def getRecentMedia():
 	hashtag_response['media_type']=dict()
 	hashtag_response['like_count']=dict()
 	hashtag_response['comments_count']=dict()
-	
+	#hashtag_response['comments']=dict()
 
 	i=0
 

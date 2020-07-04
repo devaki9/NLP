@@ -1,31 +1,40 @@
 from func import getCredentials, callAPI
 
 def getAccountDetails( params ) :
-	#API Endpoint:
-	#	https://graph.facebook.com/{graph-api-version}/{ig-user-id}?fields=business_discovery.username({ig-username}){username,website,name,ig_id,id,profile_picture_url,biography,follows_count,followers_count,media_count}&access_token={access-token}
-	endpointParams = dict() 
-	endpointParams['fields'] = 'business_discovery.username(' + params['ig_username'] + '){username,name,ig_id,id,profile_picture_url,biography,follows_count,followers_count,media_count}' 
-	endpointParams['access_token'] = params['access_token'] 
+	""" Get info on a users account
+	
+	API Endpoint:
+		https://graph.facebook.com/{graph-api-version}/{ig-user-id}?fields=business_discovery.username({ig-username}){username,website,name,ig_id,id,profile_picture_url,biography,follows_count,followers_count,media_count}&access_token={access-token}
+	Returns:
+		object: data from the endpoint
+	"""
 
-	url = params['endpoint_base'] + params['instagram_account_id'] 
+	endpointParams = dict() # parameter to send to the endpoint
+	endpointParams['fields'] = 'business_discovery.username(' + params['ig_username'] + '){username,name,ig_id,id,profile_picture_url,biography,follows_count,followers_count,media_count}' # string of fields to get back with the request for the account
+	endpointParams['access_token'] = params['access_token'] # access token
 
-	return callAPI( url, endpointParams, params['debug'] ) 
+	url = params['endpoint_base'] + params['instagram_account_id'] # endpoint url
 
-params = getCredentials() 
+	return callAPI( url, endpointParams, params['debug'] ) # make the api call
 
-params['debug'] = 'no' 
-response = getAccountDetails( params ) 
-print ("\n---- ACCOUNT Detaisl -----\n") 
+params = getCredentials() # get creds
+params['debug'] = 'no' # set debug
+response = getAccountDetails( params ) # hit the api for some data!
+
+print ("\n---- ACCOUNT Detaisl -----\n") # display latest post info
 print ("username:") 
-print (response['json_data']['business_discovery']['username']) 
+print (response['json_data']['business_discovery']['username']) # display username
 
-print ("\nNumber of posts:") 
-print (response['json_data']['business_discovery']['media_count']) 
-print ("\nFollowers:")
-print (response['json_data']['business_discovery']['followers_count'])
-print ("\nFollowing:") 
-print (response['json_data']['business_discovery']['follows_count']) 
-print ("\nProfile picture url:") 
-print (response['json_data']['business_discovery']['profile_picture_url'])
-print ("\nBio:") 
-print (response['json_data']['business_discovery']['biography']) 
+# print ("\nwebsite:") # label
+# print (response['json_data']['business_discovery']['website']) # display users website
+
+print ("\nnumber of posts:") # label
+print (response['json_data']['business_discovery']['media_count']) # display number of posts user has made
+print ("\nfollowers:") # label
+print (response['json_data']['business_discovery']['followers_count']) # display number of followers the user has
+print ("\nfollowing:") # label
+print (response['json_data']['business_discovery']['follows_count']) # display number of people the user follows
+print ("\nprofile picture url:") # label
+print (response['json_data']['business_discovery']['profile_picture_url']) # display profile picutre url
+print ("\nbiography:") # label
+print (response['json_data']['business_discovery']['biography']) # display users about section

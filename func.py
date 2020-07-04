@@ -33,9 +33,9 @@ def callAPI( url, endpointParams, debug = 'no' ):
 	return response 
 
 def displayData( response ) :
-	print ("\nURL :" )
-	print (response['url']) 
-	print ("\nEndpoint Params: ") 
-	print (response['endpoint_params_pretty']) 
-	print ("\nResponse: ") 
-	print (response['json_data_pretty']) 
+	print ("\nURL: " )# title
+	print (response['url']) # display url hit
+	print ("\nEndpoint Params: ") # title
+	print (response['endpoint_params_pretty']) # display params passed to the endpoint
+	print ("\nResponse: ") # title
+	print (response['json_data_pretty']) # make look pretty for cli
