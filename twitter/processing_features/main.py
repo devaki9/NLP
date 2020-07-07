@@ -8,6 +8,7 @@ import nltk
 from collections import Counter
 from nltk.stem import WordNetLemmatizer 
 from nltk.corpus import stopwords
+from nltk.util import ngrams
 
 def extract_emojis(tweet):
 
@@ -112,7 +113,70 @@ def remove_stopw(tweet):
 	result = ' '.join(str(e) for e in result_list)
 	return result
 
-	
+def remove_s(tweet):
+	#['`','/','%','$','-']
+	chars = ['`','/','%','$','-']
+
+	word_list = word_tokenize(tweet)
+	for word in word_list:
+		for cha in chars:
+			if cha==word:
+				word_list.remove(cha)
+	return str(word_list)
+
+def func(curr,old):
+	score = curr+old
+	if((curr+old)>=1.0):
+		return 1.0
+	if((curr+old)<=-1.0):
+		return -1.0
+	return score
+
+def grams_sent(tweet):
+
+	tokens = word_tokenize(tweet.lower())
+	uni=0
+	bi=0
+	tri=0
+	unigrams = ngrams(tokens,1)
+	bigrams = ngrams(tokens,2)
+	trigrams=ngrams(tokens,3)
+
+	analyzer = SentimentIntensityAnalyzer()
+	for t in unigrams:
+		score = get_sentiment(t)
+		uni  = func(score,uni)
+
+	bigrams = [tup[0]+' ' +tup[1] for tup in bigrams] 
+	for t in bigrams:
+		score = get_sentiment(t)
+		bi = func(score,bi)
+
+	trigrams = [ tup[0]+' ' + tup[1]+' ' + tup[2] for tup in trigrams]
+	for t in trigrams:
+		score = get_sentiment(t)
+		tri = func(score,tri)
+
+	return [uni,bi,tri]
+
+def polarity_flip(tweet):
+	word_list =word_tokenize(tweet.lower())
+
+	count=0
+	prev=-2
+	curr=0
+
+	for word in word_list:
+		score = get_sentiment(word)
+		if( prev==-5 ): #for 1st word 
+			prev=score
+		else:
+			curr = score
+			if( (curr>0 and prev<0) or (curr<0 and prev>0)    ):
+				count=count+1
+			prev=curr
+	return count
+
 def cleanfile(source,dest):
 
 	#emoji dict
@@ -120,11 +184,11 @@ def cleanfile(source,dest):
 	contractions_fp = 'contractions/contractions.txt'
 	apoDict = json.load(open(contractions_fp))
 
-	file = open(dest, 'w',encoding='UTF-8') 
+	file = open(dest, 'w',encoding='utf-8') 
 	ptr = csv.writer(file)
-	ptr.writerow(['label','exc_count','quest_count','ellipsis_count','uppercase_count','emoji_score','hashtag_score','tweet_score','positive_word','negative_word','interjection_count','intensifier_count','emoji_tweet_flip','noun_count','verb_count'])
+	ptr.writerow(['label','exc_count','quest_count','ellipsis_count','uppercase_count','emoji_score','hashtag_score','tweet_score','positive_word','negative_word','interjection_count','intensifier_count','emoji_tweet_flip','noun_count','verb_count','user_mentions','uni','bi','tri','polarity','rep_letter'])
 
-	preprocessed_test = open(dest,'w')
+	#preprocessed_test = open(dest,'w')
 	with open(source,'rt',encoding='utf-8') as file:
 		read = csv.reader(file)
 		for row in read:
@@ -132,15 +196,29 @@ def cleanfile(source,dest):
 			mail = re.compile(r'(\S+@\S+(?:\.\S+)+)')
 			tweet = mail.sub('',row[1])
 
-			#remove mentions along with ':'
-			remove_mentions = re.compile(r'(?:@[\w]+:)')
+			#remove digits and numbers -->later:convert to numbers
+			tweet = re.sub(r'\d+','',tweet)
+			tweet = tweet.lstrip('.')
+
+			#count user_mentions
+			mentions = re.findall(r'@[\w]',tweet)
+			user_mentions = len(mentions)
+
+			#remove mentions
+			remove_mentions = re.compile(r'(?:@[\w]+)')
 			tweet = remove_mentions.sub('',tweet)
+
+			remove = re.compile(r':')
+			tweet =remove.sub('',tweet)
+
+			#remove whitespaces
+			tweet = " ".join(tweet.split())
 
 			#remove pic.twitter.com/{anything}
 			tweet = re.sub(r'pic.twitter.com/[\w]*',"", tweet)
 
 			#remove @ : **Not sure about this
-			remove_mentions = re.compile(r'(?:@[\w])')
+			remove_mentions = re.compile(r'(?:@[\w]+)')
 			tweet = remove_mentions.sub('',tweet)
 
 			#count ellipsis,exclamation,question mark 
@@ -195,6 +273,28 @@ def cleanfile(source,dest):
 			remove = re.compile(r'[#]')
 			tweet = remove.sub('',tweet)
 
+			#remove special characters ['`','/','%','$','-']
+			tweet = remove_s(tweet)
+
+			#repeated letter count
+			rep = re.findall(r'((\w)\2{1,})',tweet.lower())
+			rep_letter = len(rep)
+
+			grams=[]
+			grams=grams_sent(tweet)
+			#unigram sentiment
+			uni = grams[0]
+
+			#skip_bigrams_sentiment
+			bi = grams[1]
+			#skip_trigrams_sentiment
+			tri = grams[2]
+
+			
+			#polarity flip
+			polarity=polarity_flip(tweet)
+
+
 			#positive word count
 			count = []
 			count=get_word_count(tweet)
@@ -213,8 +313,8 @@ def cleanfile(source,dest):
 			score_tweet = get_sentiment(tweet)
 			emoji_tweet_flip = get_flip(score_tweet,emoji_score)
 
-			#tweet=tweet.lower()
-		
+			tweet = tweet.lower()
+
 			#Noun_count
 			poslist = get_word_count(tweet)
 			noun_count = poslist[0]
@@ -228,11 +328,7 @@ def cleanfile(source,dest):
 			#remove stopwords
 			tweet = remove_stopw(tweet)
 
-
-
-			ptr.writerow([row[0],exc_count,quest_count,ellipsis_count,uppercase_count,emoji_score,hashtag_score,tweet_score,positive_word,negative_word,interjection_count,intensifier_count,emoji_tweet_flip,noun_count,verb_count
-			])			
-
+			ptr.writerow([row[0],exc_count,quest_count,ellipsis_count,uppercase_count,emoji_score,hashtag_score,tweet_score,positive_word,negative_word,interjection_count,intensifier_count,emoji_tweet_flip,noun_count,verb_count,user_mentions,uni,bi,tri,polarity,rep_letter])
 			
 
 
