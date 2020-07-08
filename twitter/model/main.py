@@ -8,13 +8,10 @@ os.getcwd()
 os.chdir('/home/devaki/Desktop/insta/NLP/how_to_preprocess/twitter')
 
 #Load dataset of features
-train_dataset = pd.read_csv('trialsdf.csv',header=0)
+train_dataset = pd.read_csv('p_train.csv',header=0)
 
 test_dataset = pd.read_csv('p_test.csv',header=0)
 
-
-#0,1,2,3,4,5,20]
-#try using backpropagation
 
 X_train = train_dataset.iloc[:,1:].values
 y_train = train_dataset.iloc[:,0:1].values
