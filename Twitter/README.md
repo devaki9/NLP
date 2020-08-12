@@ -8,7 +8,7 @@
 6.nltk
 7.tweepy
 ```
-## Steps for Sarcasm Detection of Tweets
+## Steps for Detection of Sarcasm in Tweets
 ```
 1.Perform Installations as per Installation.txt.
 ```
