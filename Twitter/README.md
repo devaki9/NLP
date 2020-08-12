@@ -10,20 +10,20 @@
 ```
 ## Steps for Sarcasm Detection of Tweets
 ```
-1.Perform Installations as per [Installation.txt](https://github.com/devaki9/NLP/blob/master/Twitter/Installations.txt)
+1.Perform Installations as per [Installation.txt](Twitter/Installations.txt)
 ```
 ```
 2.Place Credentials in Credentials.py
 ```
 ```
 3.Run get_tweet.py.
-Tweets are loaded in [realtime_ds.csv](https://github.com/devaki9/NLP/blob/master/Twitter/realtime_ds.csv).
+Tweets are loaded in [realtime_ds.csv](Twitter/realtime_ds.csv).
 ```
 ```
-4.Annotate each tweet manually as 1 or 0 in [realtime_ds.csv](https://github.com/devaki9/NLP/blob/master/Twitter/realtime_ds.csv).
+4.Annotate each tweet manually as 1 or 0 in [realtime_ds.csv](Twitter/realtime_ds.csv).
 ```
 ```
-5.Run [preprocess_ds.py](https://github.com/devaki9/NLP/blob/master/Twitter/preprocess_ds.py). It will generate [cleaned_ds.csv](https://github.com/devaki9/NLP/blob/master/Twitter/cleaned_ds.csv).
+5.Run [preprocess_ds.py](preprocess_ds.py). It will generate [cleaned_ds.csv](https://github.com/devaki9/NLP/blob/master/Twitter/cleaned_ds.csv).
 ```
 ```
 6.Run [main_ds.py](https://github.com/devaki9/NLP/blob/master/Twitter/main_ds.py).
