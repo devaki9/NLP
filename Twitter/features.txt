@@ -1,0 +1,14 @@
+Exclamation count
+Question mark
+Ellipsis count
+Uppercase count
+Emoji sentiment score
+Tweet sentiment score
+Hashtag sentiment score
+Positive word count
+Negative word count
+Interjection count
+intensifier_count
+emoji_tweet_flip
+Noun_count
+Verb_count		

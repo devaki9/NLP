@@ -1,0 +1,25 @@
+Installations:
+
+1.vaderSentiment
+$ pip install vaderSentiment
+
+2.fasttext
+$ pip install fasttext
+
+3.pandas
+$ pip install pandas
+
+4.numpy
+$ pip install numpy
+
+5.sci-kitlearn
+$ pip install sci-kitlearn
+
+6.nltk
+$ pip3 install nltk
+
+7.tweepy
+$ pip install tweepy
+
+
+## Note: If Anaconda is installed, skip steps 3,4,5
